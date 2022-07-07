@@ -43,21 +43,19 @@ function filterByBreweryTypeListener() {
   selectBreweryTypeButton.addEventListener("change", (event) => {
     const myType = event.target.value;
 
-    console.log("my event", event.target.value);
+    //console.log("my event", event.target.value);
     if (state.breweries.length) {
-      
       const newListFilter = state.breweries.filter((brewery) => {
-        console.log("filter", brewery.brewery_type, myType)
+        //console.log("filter", brewery.brewery_type, myType);
         return brewery.brewery_type === myType;
-
       });
-      console.log("result", newListFilter)
+      //console.log("result", newListFilter);
       renderBreweries(newListFilter);
     }
   });
 }
 //run through my list of breweries and check if the brewery is of myType
-      // save my result in a variable and render it
+// save my result in a variable and render it
 function initalise() {
   searchByStateListener();
   filterByBreweryTypeListener();
@@ -125,16 +123,16 @@ function renderBrewery(brewery) {
   }
   breweriesList.appendChild(liE1);
 }
-
-function renderBreweries(breweriesList) {
-    console.log("render", breweriesList)
+// parameter was clashing with ul element of html --> saved to breweryList constant.
+function renderBreweries(breweries) {
+  //console.log("render", breweriesList);
   breweriesList.innerHTML = "";
-  breweriesList.forEach((brewery) => renderBrewery(brewery));
-
-  // if not micro, regional or brewpub, skip rendering
+  breweries.forEach((brewery) => renderBrewery(brewery));
 }
 
 initalise();
+
+// OLD CODE - NOTES
 
 // filter --> take new array and filter by type and render
 // fetch("https://api.openbrewerydb.org/breweries?by_state=new_york&per")
