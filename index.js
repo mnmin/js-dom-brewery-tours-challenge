@@ -57,6 +57,8 @@ function renderBrewery(brewery) {
 
     breweriesList.innerHTML = ""
 
+    state.breweries.forEach(brewery => {
+
     const liE1 = document.createElement("li")
 
     const h2E1 = document.createElement("h2")
@@ -114,8 +116,9 @@ function renderBrewery(brewery) {
         link.innerText = "Visit Website"
         section3.append(link)
     }
-   
-breweriesList.appendChild(liE1);
+    breweriesList.appendChild(liE1);
+})
+
 }
 
 //   const li = document.createElement("li");
