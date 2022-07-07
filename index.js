@@ -1,5 +1,6 @@
 const stateForm = document.querySelector("#select-state-form");
 const breweriesList = document.querySelector("#breweries-list");
+const selectBreweryTypeButton = document.querySelector("#filter-by-type");
 
 const apiURL = "https://api.openbrewerydb.org/breweries";
 
@@ -22,7 +23,7 @@ function searchByStateListener() {
       })
       .then((data) => {
         setBreweriesData(data);
-        render();
+        renderBreweries(state.breweries);
       });
   });
 }
@@ -34,92 +35,113 @@ function setBreweriesData(breweries) {
   state.breweries = filterBreweries;
 }
 
+//selectBreweryTypeButton.addEventListener();
 
 function filterByBreweryTypeListener() {
-  const selectBreweryTypeButton = document.querySelector("#filter-by-type");
+  //const selectBreweryTypeButton = document.querySelector("#filter-by-type");
 
-  selectBreweryTypeButton.addEventListener("submit", (event) => {
-    state.types = event.target.value;
+  selectBreweryTypeButton.addEventListener("change", (event) => {
+    const myType = event.target.value;
 
-    if (brew_type.length > 0) {
-      selectBreweryTypeButton = state.usState.filter((brewery) => {
-        return brewery.brew_type === state.types;
+    console.log("my event", event.target.value);
+    if (state.breweries.length) {
+      
+      const newListFilter = state.breweries.filter((brewery) => {
+        console.log("filter", brewery.brewery_type, myType)
+        return brewery.brewery_type === myType;
+
       });
+      console.log("result", newListFilter)
+      renderBreweries(newListFilter);
     }
   });
 }
-
+//run through my list of breweries and check if the brewery is of myType
+      // save my result in a variable and render it
 function initalise() {
   searchByStateListener();
+  filterByBreweryTypeListener();
 }
 
 function renderBrewery(brewery) {
+  console.log("render brewery", brewery);
 
-    breweriesList.innerHTML = ""
+  const liE1 = document.createElement("li");
 
-    state.breweries.forEach(brewery => {
+  const h2E1 = document.createElement("h2");
+  h2E1.innerText = `${brewery.name}`;
+  liE1.append(h2E1);
 
-    const liE1 = document.createElement("li")
+  const divE1 = document.createElement("div");
+  divE1.setAttribute("class", "type");
+  divE1.innerText = `${brewery.brewery_type}`;
+  liE1.append(divE1);
 
-    const h2E1 = document.createElement("h2")
-    h2E1.innerText = `${brewery.name}`
-    liE1.append(h2E1)
+  const section1 = document.createElement("section");
+  section1.setAttribute("class", "address");
+  liE1.append(section1);
 
-    const divE1 = document.createElement("div")
-    divE1.setAttribute("class", "type")
-    divE1.innerText = `${brewery.brewery_type}`
-    liE1.append(divE1)
+  const h3E2 = document.createElement("h3");
+  //h3E1.setAttribute("class", "address")
+  h3E2.innerText = "Address:";
+  section1.append(h3E2);
 
-    const section1 = document.createElement("section")
-    section1.setAttribute("class", "address")
-    liE1.append(section1)
+  const p1E2 = document.createElement("p");
+  //p1E1.setAttribute("class", "address")
+  p1E2.innerText = `${brewery.street}`;
+  section1.append(p1E2);
 
-    const h3E2 = document.createElement("h3")
-    //h3E1.setAttribute("class", "address")
-    h3E2.innerText = "Address:"
-    section1.append(h3E2)
+  const p2E2 = document.createElement("p");
+  p2E2.innerText = `${brewery.postal_code}`;
+  section1.append(p2E2);
 
-    const p1E2 = document.createElement("p")
-    //p1E1.setAttribute("class", "address")
-    p1E2.innerText = `${brewery.street}`
-    section1.append(p1E2)
+  const p2E2Tag = document.createElement("strong");
+  //p2E2Tag.tagName("strong") // do at the end
+  p2E2.append(p2E2Tag);
 
-    const p2E2 = document.createElement("p")
-    p2E2.innerText = `${brewery.postal_code}`
-    section1.append(p2E2)
+  const section2 = document.createElement("section");
+  section2.setAttribute("class", "phone");
+  liE1.append(section2);
 
-    const p2E2Tag = document.createElement("strong")
-    //p2E2Tag.tagName("strong")
-    p2E2.append(p2E2Tag)
+  const h3E3 = document.createElement("h3");
+  h3E3.innerText = "Phone:";
+  section2.append(h3E3);
 
-    const section2 = document.createElement("section")
-    section2.setAttribute("class", "phone")
-    liE1.append(section2)
+  const p3E3 = document.createElement("p");
+  p3E3.innerText = `${brewery.phone}`;
+  section2.append(p3E3);
 
-    const h3E3 = document.createElement("h3")
-    h3E3.innerText = "Phone:"
-    section2.append(h3E3)
+  const section3 = document.createElement("section");
+  section3.setAttribute("class", "link");
+  liE1.append(section3);
 
-    const p3E3 = document.createElement("p")
-    p3E3.innerText = `${brewery.phone}`
-    section2.append(p3E3)
-
-    const section3 = document.createElement("section")
-    section3.setAttribute("class", "link")
-    liE1.append(section3)
-
-    //console.log("brewery", brewery)
-    if(brewery.website_url) {
-        const link = document.createElement("a")
-        link.setAttribute("href", `${brewery.website_url}`,)
-        link.setAttribute("target", "_blank")
-        link.innerText = "Visit Website"
-        section3.append(link)
-    }
-    breweriesList.appendChild(liE1);
-})
-
+  //console.log("brewery", brewery)
+  if (brewery.website_url) {
+    const link = document.createElement("a");
+    link.setAttribute("href", `${brewery.website_url}`);
+    link.setAttribute("target", "_blank");
+    link.innerText = "Visit Website";
+    section3.append(link);
+  }
+  breweriesList.appendChild(liE1);
 }
+
+function renderBreweries(breweriesList) {
+    console.log("render", breweriesList)
+  breweriesList.innerHTML = "";
+  breweriesList.forEach((brewery) => renderBrewery(brewery));
+
+  // if not micro, regional or brewpub, skip rendering
+}
+
+initalise();
+
+// filter --> take new array and filter by type and render
+// fetch("https://api.openbrewerydb.org/breweries?by_state=new_york&per")
+// .then(resp => resp.json())
+// .then(data => console.log(data))
+
+// const submitBtn = document.querySelector('')
 
 //   const li = document.createElement("li");
 //   li.innerHTML = `<h2>${brewery.name}</h2>
@@ -136,21 +158,3 @@ function renderBrewery(brewery) {
 //   <section class="link">
 //     <a href="${brewery.website_url}" target="_blank">Visit Website</a>
 //   </section>`;
-
-function renderBreweries() {
-  state.breweries.forEach((brewery) => renderBrewery(brewery)); // if not micro, regional or brewpub, skip rendering
-}
-
-render = () => {
-  breweriesList.innerHTML = "";
-
-  renderBreweries();
-};
-
-initalise();
-
-// fetch("https://api.openbrewerydb.org/breweries?by_state=new_york&per")
-// .then(resp => resp.json())
-// .then(data => console.log(data))
-
-// const submitBtn = document.querySelector('')
